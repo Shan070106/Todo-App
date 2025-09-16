@@ -1,2 +1,3 @@
 com/toDo/Main.class
+com/toDo/util/DatabaseConnection.class
 com/toDo/model/Todo.class
