@@ -59,7 +59,7 @@ public class Todo {
     public void setCreated_at(LocalDateTime created_at) {
         this.created_at = created_at;
     }
-    public LocalDateTime getUpdeated_at() {
+    public LocalDateTime getUpdated_at() {
         return updeated_at;
     }
     public void setUpdeated_at(LocalDateTime updeated_at) {

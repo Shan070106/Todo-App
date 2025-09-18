@@ -152,10 +152,32 @@ public class TodoAppGUI extends JFrame {
     }
 
     private void refreshTodo(){
-        
+        loadTodo();
     }
 
     private void loadTodo(){
-        
+        try {
+             List<Todo> todos = todoDAO.getAllTodos();
+            updateTable(todos);  
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Failed to load","Error",JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+             
+    }
+
+    private void updateTable(List<Todo> todos){
+        tableModel.setRowCount(0);
+        for(Todo t : todos){
+            Object[] row = {
+                t.getId(),
+                t.getTitle(),
+                t.getCreated_at(),
+                t.getDescription(),
+                t.getUpdated_at(),
+                t.isCompleted()
+            };
+            tableModel.addRow(row);
+        }
     }
 }

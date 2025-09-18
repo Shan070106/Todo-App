@@ -11,9 +11,9 @@ import com.toDo.gui.TodoAppGUI;
 import com.toDo.util.DatabaseConnection;
 public class Main {
     public static void main(String arg[]){
-        DatabaseConnection dbConnection = new DatabaseConnection();
+        
         try{
-            Connection cn = dbConnection.getDBConnection();
+            Connection cn = DatabaseConnection.getDBConnection();
             System.out.println("Connection ok dei super da");
         }
         catch(SQLException e){
