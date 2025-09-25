@@ -19,12 +19,14 @@ public class Main {
         catch(SQLException e){
             System.out.println("connection failed da");
         }
+
         try{
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         }
         catch(ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e){
             System.out.println();
         }
+        
         SwingUtilities.invokeLater(
             ()->{
                 try {
