@@ -6,8 +6,8 @@ import java.sql.SQLException;
 
 public class DatabaseConnection {
     public static final String URL = "jdbc:mysql://localhost:3306/todoapp";
-    public static final String USERNAME = "shan";
-    public static final String PASSWORD = "Shan@716";
+    public static final String USERNAME = "root";
+    public static final String PASSWORD = "711523bam051";
     
     static{
         try{

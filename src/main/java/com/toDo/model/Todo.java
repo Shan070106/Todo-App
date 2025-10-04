@@ -7,11 +7,11 @@ public class Todo {
     private String description;
     private boolean completed;
     private LocalDateTime created_at;
-    private LocalDateTime updeated_at;
+    private LocalDateTime updated_at;
 
     public Todo(){
         this.created_at = LocalDateTime.now();
-        this.updeated_at = LocalDateTime.now();
+        this.updated_at = LocalDateTime.now();
 
     }
 
@@ -21,13 +21,13 @@ public class Todo {
         this.description = description;
     }
 
-    public Todo(int id,String title,String description,boolean completed, LocalDateTime created_at,LocalDateTime updeated_at){
+    public Todo(int id,String title,String description,boolean completed, LocalDateTime created_at,LocalDateTime updated_at){
         this.id=id;
         this.title = title;
         this.completed = completed;
         this.description = description;
         this.created_at = created_at;
-        this.updeated_at = updeated_at;
+        this.updated_at = updated_at;
     }
 
     public int getId() {
@@ -61,12 +61,9 @@ public class Todo {
         this.created_at = created_at;
     }
     public LocalDateTime getUpdated_at() {
-        return updeated_at;
+        return updated_at;
     }
-    public void setUpdeated_at(LocalDateTime updeated_at) {
-        this.updeated_at = updeated_at;
+    public void setUpdated_at(LocalDateTime updated_at) {
+        this.updated_at = updated_at;
     }
-   
-
-    
-}
+};

@@ -1,42 +1,43 @@
 package com.toDo.dao;
-import com.toDo.model.Todo;
-
-// import java.security.Timestamp;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-
-import com.toDo.util.DatabaseConnection;
-import java.sql.SQLException;
 import java.sql.ResultSet;
-import java.util.ArrayList;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+
+import com.toDo.model.Todo;
+import com.toDo.util.DatabaseConnection;
 
 public class TodoAppDAO {
 
-    private static final String SELECT_ALL_TODO = "SELECT * FROM todo ORDER BY created_at DESC;";
-    private static final String INSERT_TODO = "INSERT INTO todo (title,description,completed, created_at,updated_at) VALUES(?,?,?,?,?);";
-    private static final String SELECT_TODO_BY_ID = "SELECT * FROM todo WHERE id=?;";
-    private static final String UPDATE_TODO = "UPDATE todo SET title = ?, description = ?, completed = ?,updated_at = ? WHERE id = ?;";
-    private static final String DELETE_TODO = "DELETE FROM todo WHERE id = ?;";
-    private static final String FILTER_TODO = "SELECT * FROM todo WHERE completed = ?;";
+    private static final String SELECT_ALL_TODO = "SELECT * FROM todo ORDER BY created_at DESC";
+    private static final String INSERT_TODO = "INSERT INTO todo (title,description,completed, created_at,updated_at) VALUES(?,?,?,?,?)";
+    private static final String SELECT_TODO_BY_ID = "SELECT * FROM todo WHERE id=?";
+    private static final String UPDATE_TODO = "UPDATE todo SET title = ?, description = ?, completed = ?,updated_at = ? WHERE id = ?";
+    private static final String DELETE_TODO = "DELETE FROM todo WHERE id = ?";
+    private static final String FILTER_TODO = "SELECT * FROM todo WHERE completed = ?";
 
     private Todo getTodo(ResultSet res)throws SQLException{
         int id = res.getInt("id");
         String title = res.getString("title");
         String description = res.getString("description");
         Boolean completed = res.getBoolean("completed");
-        LocalDateTime updated_at = res.getTimestamp("updated_at").toLocalDateTime();
-        LocalDateTime created_at = res.getTimestamp("created_at").toLocalDateTime();
+        Timestamp updatedTs = res.getTimestamp("updated_at");
+        Timestamp createdTs = res.getTimestamp("created_at");
+
+    LocalDateTime updated_at = updatedTs != null ? updatedTs.toLocalDateTime() : null;
+    LocalDateTime created_at = createdTs != null ? createdTs.toLocalDateTime() : null;
         
         Todo todo =  new Todo(id,title,description,completed,created_at,updated_at);
         return todo;
     }
 
     public List<Todo> getAllTodos() throws SQLException {
-        List<Todo> todos = new ArrayList<Todo>();
+        List<Todo> todos = new ArrayList<>();
 
         try( Connection conn = DatabaseConnection.getDBConnection();
             PreparedStatement stmt = conn.prepareStatement(SELECT_ALL_TODO);
@@ -52,11 +53,13 @@ public class TodoAppDAO {
     }
 
     public int createTodo(Todo todo) throws SQLException{
+        if (todo.getCreated_at() == null) todo.setCreated_at(LocalDateTime.now());
+        if (todo.getUpdated_at() == null) todo.setUpdated_at(todo.getCreated_at());
+
         try(
             Connection cn = DatabaseConnection.getDBConnection();
             PreparedStatement stmt = cn.prepareStatement(INSERT_TODO, Statement.RETURN_GENERATED_KEYS);
-        )
-        {
+        ) {
             stmt.setString(1,todo.getTitle());
             stmt.setString(2,todo.getDescription());
             stmt.setBoolean(3, todo.isCompleted());
@@ -71,12 +74,14 @@ public class TodoAppDAO {
 
             try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
-                    return generatedKeys.getInt(1);
+                    int id = generatedKeys.getInt(1);
+                    todo.setId(id);
+                    return id;
                 }    
                 else{
-                    throw new SQLException("Createing failed ");
+                    throw new SQLException("Creating failed, no ID obtained.");
                 }            
-            } 
+            }
         }
         
     }
@@ -112,12 +117,12 @@ public class TodoAppDAO {
         }
     }
 
-    public boolean deleteTodo(Todo todo) throws SQLException{
+    public boolean deleteTodo(int tododId) throws SQLException{
         try (
             Connection cn = DatabaseConnection.getDBConnection();
             PreparedStatement stmt = cn.prepareStatement(DELETE_TODO);
         ) {
-            stmt.setInt(1, todo.getId());
+            stmt.setInt(1, tododId);
 
             int rowsAffected = stmt.executeUpdate();
             return rowsAffected>0;
@@ -125,13 +130,13 @@ public class TodoAppDAO {
         } 
     }
 
-    public List<Todo> todoFilter(String selectedQuery) throws SQLException{
-        List<Todo> todos = new ArrayList<Todo>();
+    public List<Todo> todoFilter(boolean  selectedQuery) throws SQLException{
+        List<Todo> todos = new ArrayList<>();
         try (
                 Connection cn = DatabaseConnection.getDBConnection();
                 PreparedStatement stmt = cn.prepareStatement(FILTER_TODO); //final attribute in upper case
             ) {
-                stmt.setBoolean(1, (selectedQuery=="Completed")?true:false);
+                stmt.setBoolean(1, selectedQuery);
                 ResultSet res = stmt.executeQuery();
 
                 while(res.next()){

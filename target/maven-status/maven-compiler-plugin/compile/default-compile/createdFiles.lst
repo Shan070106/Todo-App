@@ -1,6 +1,6 @@
-com/toDo/model/Todo.class
-com/toDo/gui/TodoAppGUI.class
-com/toDo/gui/TodoAppGUI$1.class
-com/toDo/Main.class
-com/toDo/util/DatabaseConnection.class
-com/toDo/dao/TodoAppDAO.class
+com\toDo\util\DatabaseConnection.class
+com\toDo\gui\TodoAppGUI$1.class
+com\toDo\gui\TodoAppGUI.class
+com\toDo\dao\TodoAppDAO.class
+com\toDo\Main.class
+com\toDo\model\Todo.class
