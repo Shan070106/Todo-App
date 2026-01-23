@@ -173,8 +173,3 @@ If there is no license in the repository, the project is "All rights reserved" b
 ## Contact
 Maintainer: Shan070106  
 GitHub: https://github.com/Shan070106
-
----
-
-Notes:
-- This README is intentionally generic because I haven't inspected the repository contents. If you'd like, I can open the repo, find the exact main class, artifact name, storage mechanism, CLI flags or REST endpoints, and update this README with precise instructions and concrete examples (or open a PR that adds the README file).
